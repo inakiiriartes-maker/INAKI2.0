@@ -1,0 +1,399 @@
+<title>Red de Salones</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg:#F6F2ED;
+    --surface:#FFFFFF;
+    --surface-2:#F1E8E2;
+    --ink:#231C19;
+    --muted:#7A6F67;
+    --line:#E6DBD2;
+    --accent:#8C2E3B;
+    --accent-ink:#FDEEEF;
+    --accent-soft:#F4E1E0;
+    --lfl:#3F6B4E;
+    --lfl-soft:#E6EEE7;
+    --cl:#867A70;
+    --cl-soft:#EEE8E2;
+    --op:#B0721C;
+    --op-soft:#F4E8D4;
+    --shadow: 0 1px 2px rgba(35,28,25,0.06), 0 6px 20px -8px rgba(35,28,25,0.18);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1B1613;
+      --surface:#231D19;
+      --surface-2:#2B221E;
+      --ink:#F3EBE5;
+      --muted:#AB9C92;
+      --line:#3A2F29;
+      --accent:#E28D93;
+      --accent-ink:#2A1417;
+      --accent-soft:#3A2226;
+      --lfl:#8FBB9C;
+      --lfl-soft:#243027;
+      --cl:#B3A79C;
+      --cl-soft:#2C2622;
+      --op:#E3B15E;
+      --op-soft:#372B18;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 26px -10px rgba(0,0,0,0.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1B1613;
+    --surface:#231D19;
+    --surface-2:#2B221E;
+    --ink:#F3EBE5;
+    --muted:#AB9C92;
+    --line:#3A2F29;
+    --accent:#E28D93;
+    --accent-ink:#2A1417;
+    --accent-soft:#3A2226;
+    --lfl:#8FBB9C;
+    --lfl-soft:#243027;
+    --cl:#B3A79C;
+    --cl-soft:#2C2622;
+    --op:#E3B15E;
+    --op-soft:#372B18;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 26px -10px rgba(0,0,0,0.55);
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"IBM Plex Sans", system-ui, sans-serif;
+    padding: clamp(20px,4vw,48px) 20px 64px;
+  }
+  .wrap{ max-width:1080px; margin:0 auto; display:flex; flex-direction:column; gap:28px; }
+
+  .eyebrow{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  h1{
+    font-family:"Fraunces", Georgia, serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(32px,5vw,44px);
+    line-height:1.05;
+    margin:6px 0 0;
+    text-wrap:balance;
+  }
+  .lede{
+    max-width:60ch;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.55;
+    margin:10px 0 0;
+  }
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .stat{
+    background:var(--surface);
+    padding:18px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .stat .n{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:600;
+    font-size:30px;
+    font-variant-numeric:tabular-nums;
+  }
+  .stat .l{ font-size:12.5px; color:var(--muted); }
+
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+  }
+  .search{
+    flex:1 1 220px;
+    position:relative;
+  }
+  .search input{
+    width:100%;
+    font:inherit;
+    font-size:14px;
+    padding:10px 14px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+  }
+  .search input:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .search input::placeholder{ color:var(--muted); }
+
+  .chiprow{ display:flex; flex-wrap:wrap; gap:7px; }
+  .chip{
+    font:inherit;
+    font-size:12.5px;
+    font-weight:500;
+    padding:7px 12px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--muted);
+    cursor:pointer;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:var(--accent-ink);
+  }
+  .chip:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .count-line{ font-size:12.5px; color:var(--muted); }
+  .count-line b{ color:var(--ink); font-variant-numeric:tabular-nums; }
+
+  .group{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .group + .group{ margin-top:14px; }
+  .group-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    padding:12px 18px;
+    background:var(--surface-2);
+    border-bottom:1px solid var(--line);
+  }
+  .group-head .brand{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:600;
+    font-size:16px;
+  }
+  .group-head .n{
+    font-size:12px;
+    color:var(--muted);
+    font-variant-numeric:tabular-nums;
+  }
+
+  .tablewrap{ overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; min-width:560px; }
+  thead th{
+    text-align:left;
+    font-size:11.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:500;
+    padding:8px 18px;
+    border-bottom:1px solid var(--line);
+  }
+  tbody td{
+    padding:10px 18px;
+    border-bottom:1px solid var(--line);
+    font-size:14px;
+    vertical-align:middle;
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--surface-2); }
+  td.salon{ font-weight:500; }
+  td.code{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:12.5px;
+    color:var(--muted);
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+
+  .pill{
+    display:inline-block;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:11px;
+    font-weight:500;
+    padding:3px 8px;
+    border-radius:6px;
+    white-space:nowrap;
+  }
+  .pill.lfl{ background:var(--lfl-soft); color:var(--lfl); }
+  .pill.cl{ background:var(--cl-soft); color:var(--cl); }
+  .pill.op{ background:var(--op-soft); color:var(--op); }
+
+  .empty{
+    padding:40px 18px;
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+  }
+
+  footer{
+    font-size:12px;
+    color:var(--muted);
+    border-top:1px solid var(--line);
+    padding-top:16px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+</style>
+
+<div class="wrap">
+
+  <div>
+    <div class="eyebrow">Grupo Provalliance · KPI D+3</div>
+    <h1>Red de Salones</h1>
+    <p class="lede">Listado de salones por enseña, tal y como figura en <em>Listado Salones.xlsx</em>. Filtra por marca o tipo de reporting, o busca directamente un salón.</p>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <div class="search">
+      <input id="search" type="text" placeholder="Buscar salón, marca o nº de proyecto…" />
+    </div>
+  </div>
+  <div class="chiprow" id="brandChips"></div>
+  <div class="chiprow" id="typeChips"></div>
+  <div class="count-line" id="countLine"></div>
+
+  <div id="results"></div>
+
+  <footer>
+    <span>91 salones · 8 enseñas</span>
+    <span>Fuente: Listado Salones.xlsx — hoja "SALES SALONS KPI D+3"</span>
+  </footer>
+
+</div>
+
+<script>
+const DATA = [{"Brand": "JLDS", "ProjectNumber1": "10018", "ProjectNumber2": "020000005", "Type": "LFL", "Salon": "ESP COIFF RENTERIA"}, {"Brand": "JLDS", "ProjectNumber1": "10002", "ProjectNumber2": "001000001", "Type": "LFL", "Salon": "JLD MAGDALENA"}, {"Brand": "JLDS", "ProjectNumber1": "10005", "ProjectNumber2": "028000004", "Type": "CL", "Salon": "JLD PLAZA NORTE"}, {"Brand": "JLDS", "ProjectNumber1": "10004", "ProjectNumber2": "020000001", "Type": "LFL", "Salon": "JLD URBIL"}, {"Brand": "JLDS", "ProjectNumber1": "10003", "ProjectNumber2": "020000000", "Type": "LFL", "Salon": "JLD GARBERA"}, {"Brand": "JLDS", "ProjectNumber1": "10006", "ProjectNumber2": "028000007", "Type": "LFL", "Salon": "JLD BERCEO"}, {"Brand": "JLDS", "ProjectNumber1": "0", "ProjectNumber2": "0004", "Type": "CL", "Salon": "JLD PASEO DAMAS"}, {"Brand": "JLDS", "ProjectNumber1": "0", "ProjectNumber2": "0003", "Type": "CL", "Salon": "JLD PUERTO VENECIA"}, {"Brand": "JLDS", "ProjectNumber1": "10007", "ProjectNumber2": "0002", "Type": "LFL", "Salon": "JLD GRAN CASA"}, {"Brand": "JLDS", "ProjectNumber1": "10010", "ProjectNumber2": "0005", "Type": "LFL", "Salon": "JLD INDUSTRIA"}, {"Brand": "JLDS", "ProjectNumber1": "10042", "ProjectNumber2": "MG", "Type": "LFL", "Salon": "JLD MAGIC"}, {"Brand": "JLDS", "ProjectNumber1": "10061", "ProjectNumber2": "0006", "Type": "LFL", "Salon": "JLD LA MAQUINISTA"}, {"Brand": "JLDS", "ProjectNumber1": "10064", "ProjectNumber2": "0007", "Type": "LFL", "Salon": "JLD CC ARTEA"}, {"Brand": "FPS", "ProjectNumber1": "10019", "ProjectNumber2": "031000000", "Type": "LFL", "Salon": "FP ITORA PAMPLONA"}, {"Brand": "FPS", "ProjectNumber1": "10012", "ProjectNumber2": "028000012", "Type": "LFL", "Salon": "FP CLAUDIO COELLO"}, {"Brand": "LL", "ProjectNumber1": "10015", "ProjectNumber2": "028000018", "Type": "LFL", "Salon": "LLONGUER JOSE ORTEGA Y GRASSET"}, {"Brand": "LL", "ProjectNumber1": "10017", "ProjectNumber2": "028000020", "Type": "LFL", "Salon": "LLONGUERAS PEDRO MARÍA RIC"}, {"Brand": "LL", "ProjectNumber1": "10014", "ProjectNumber2": "028000015", "Type": "LFL", "Salon": "LLONGUERAS VIA AUGUSTA"}, {"Brand": "LL", "ProjectNumber1": "10013", "ProjectNumber2": "028000014", "Type": "LFL", "Salon": "LLONGUERAS PAU CASALS"}, {"Brand": "LL", "ProjectNumber1": "10021", "ProjectNumber2": "FS", "Type": "LFL", "Salon": "LLONGUERAS FCO. DE SALES"}, {"Brand": "LL", "ProjectNumber1": "0", "ProjectNumber2": "SL", "Type": "CL", "Salon": "LLONGUERAS SECUNDINO LOPEZ"}, {"Brand": "LL", "ProjectNumber1": "10020", "ProjectNumber2": "CC", "Type": "LFL", "Salon": "LLONGUERAS EL CORTE INGLES"}, {"Brand": "LL", "ProjectNumber1": "0", "ProjectNumber2": "BM", "Type": "CL", "Salon": "LLONGUERAS BENEDICTO MATEO"}, {"Brand": "LL", "ProjectNumber1": "10024", "ProjectNumber2": "SB", "Type": "LFL", "Salon": "LLONGUERAS BALMES"}, {"Brand": "LL", "ProjectNumber1": "10016", "ProjectNumber2": "028000019", "Type": "LFL", "Salon": "LLONGUERAS RUZAFA"}, {"Brand": "LL", "ProjectNumber1": "10027", "ProjectNumber2": "DS", "Type": "LFL", "Salon": "LLONGUERAS DONANTES DE SANGRE"}, {"Brand": "LL", "ProjectNumber1": "10022", "ProjectNumber2": "GI", "Type": "LFL", "Salon": "LLONGUERAS GIRONA"}, {"Brand": "LL", "ProjectNumber1": "10033", "ProjectNumber2": "NB", "Type": "LFL", "Salon": "LLONGUERAS NOU BALMES"}, {"Brand": "LL", "ProjectNumber1": "10032", "ProjectNumber2": "PP", "Type": "LFL", "Salon": "LLONGUERAS PAMPLONA"}, {"Brand": "LL", "ProjectNumber1": "10034", "ProjectNumber2": "RC", "Type": "LFL", "Salon": "LLONGUERAS RAMBLA CATALUÑA"}, {"Brand": "LL", "ProjectNumber1": "10023", "ProjectNumber2": "SA", "Type": "LFL", "Salon": "LLONGUERAS SALAMANCA"}, {"Brand": "LL", "ProjectNumber1": "10011", "ProjectNumber2": "028000009", "Type": "LFL", "Salon": "LLONGUERAS GAVIA"}, {"Brand": "LL", "ProjectNumber1": "10030", "ProjectNumber2": "EG", "Type": "LFL", "Salon": "LLONGUERAS ECO"}, {"Brand": "LL", "ProjectNumber1": "10035", "ProjectNumber2": "AN", "Type": "LFL", "Salon": "LLONGUERAS ANDORRA"}, {"Brand": "LL", "ProjectNumber1": "10045", "ProjectNumber2": "CT", "Type": "LFL", "Salon": "LLONGUERAS ECI TENERIFE"}, {"Brand": "LL", "ProjectNumber1": "10063", "ProjectNumber2": "GP", "Type": "LFL", "Salon": "LLONGUERAS GRAN PLAZA"}, {"Brand": "LOIDA", "ProjectNumber1": "10025", "ProjectNumber2": "OV", "Type": "LFL", "Salon": "LLONGUERAS ESTHER OVIEDO ISUC"}, {"Brand": "LL", "ProjectNumber1": "10041", "ProjectNumber2": "CD", "Type": "LFL", "Salon": "LLONGUERAS ECI DIAGONAL"}, {"Brand": "LL", "ProjectNumber1": "10026", "ProjectNumber2": "AB", "Type": "LFL", "Salon": "LLONGUERAS ALFREDO BRAÑAS"}, {"Brand": "LL", "ProjectNumber1": "10031", "ProjectNumber2": "FL", "Type": "LFL", "Salon": "LLONGUERAS FLEMING"}, {"Brand": "LL", "ProjectNumber1": "10036", "ProjectNumber2": "000000001", "Type": "LFL", "Salon": "LLONGUERAS ALCALA"}, {"Brand": "LL", "ProjectNumber1": "10048", "ProjectNumber2": "LV", "Type": "LFL", "Salon": "LLONGUERAS LA VILLA"}, {"Brand": "LL", "ProjectNumber1": "10029", "ProjectNumber2": "AR", "Type": "LFL", "Salon": "LLONGUERAS ARAGONIA"}, {"Brand": "LL", "ProjectNumber1": "10060", "ProjectNumber2": "VL", "Type": "LFL", "Salon": "LLONGUERAS VILAFRANCA"}, {"Brand": "LOIDA", "ProjectNumber1": "10037", "ProjectNumber2": "1CAG", "Type": "LFL", "Salon": "CASA DEL AGUA"}, {"Brand": "LOIDA", "ProjectNumber1": "10038", "ProjectNumber2": "2RCA", "Type": "LFL", "Salon": "ECI RAMÓN Y CAJAL"}, {"Brand": "LOIDA", "ProjectNumber1": "10039", "ProjectNumber2": "1EPA", "Type": "LFL", "Salon": "EMILIA PARDO BAZÁN"}, {"Brand": "LOIDA", "ProjectNumber1": "10040", "ProjectNumber2": "1RAR", "Type": "LFL", "Salon": "SANTIAGO"}, {"Brand": "LOIDA", "ProjectNumber1": "10057", "ProjectNumber2": "IKPROV01", "Type": "OP", "Salon": "IK CORUÑA"}, {"Brand": "LOIDA", "ProjectNumber1": "10058", "ProjectNumber2": "IKPROV02", "Type": "CL", "Salon": "IK VIGO"}, {"Brand": "LOIDA", "ProjectNumber1": "10062", "ProjectNumber2": "CV", "Type": "LFL", "Salon": "LOIDA ECI VIGO"}, {"Brand": "RASEL", "ProjectNumber1": "10071", "ProjectNumber2": "ABA", "Type": "LFL", "Salon": "JLD ABANDO"}, {"Brand": "RASEL", "ProjectNumber1": "10068", "ProjectNumber2": "0008", "Type": "CL", "Salon": "JLD CANCILLER AYALA"}, {"Brand": "RASEL", "ProjectNumber1": "10069", "ProjectNumber2": "0009", "Type": "CL", "Salon": "JLD HENAO"}, {"Brand": "RASEL", "ProjectNumber1": "10070", "ProjectNumber2": "0010", "Type": "CL", "Salon": "JLD HERNANI"}, {"Brand": "RASEL", "ProjectNumber1": "10066", "ProjectNumber2": "0011", "Type": "CL", "Salon": "JLD IÑIGO ARISTA"}, {"Brand": "RASEL", "ProjectNumber1": "10065", "ProjectNumber2": "0012", "Type": "CL", "Salon": "JLD JUAN XXIII"}, {"Brand": "RASEL", "ProjectNumber1": "0", "ProjectNumber2": "SAN", "Type": "CL", "Salon": "JLD SANCHO"}, {"Brand": "RASEL", "ProjectNumber1": "10067", "ProjectNumber2": "0013", "Type": "LFL", "Salon": "JLD URBIETA"}, {"Brand": "JLDS", "ProjectNumber1": "10073", "ProjectNumber2": "0014", "Type": "CL", "Salon": "JLD RECOLETOS"}, {"Brand": "NL", "ProjectNumber1": "10051", "ProjectNumber2": "", "Type": "LFL", "Salon": "NUEVO LOOK ARENAS"}, {"Brand": "NL", "ProjectNumber1": "10043", "ProjectNumber2": "AI", "Type": "LFL", "Salon": "NUEVO LOOK ALISIOS"}, {"Brand": "LL", "ProjectNumber1": "10050", "ProjectNumber2": "ML", "Type": "LFL", "Salon": "LLONGUERAS MESA Y LOPEZ"}, {"Brand": "LL", "ProjectNumber1": "10044", "ProjectNumber2": "AL", "Type": "LFL", "Salon": "LLONGUERAS ALISIOS"}, {"Brand": "JLDS", "ProjectNumber1": "10047", "ProjectNumber2": "LR", "Type": "LFL", "Salon": "JLD CC LAS ROTONDAS"}, {"Brand": "LL", "ProjectNumber1": "10046", "ProjectNumber2": "LA", "Type": "LFL", "Salon": "LL ARENAS"}, {"Brand": "NL", "ProjectNumber1": "10056", "ProjectNumber2": "LT", "Type": "LFL", "Salon": "NUEVO LOOK TERRAZAS"}, {"Brand": "NL", "ProjectNumber1": "10049", "ProjectNumber2": "MI", "Type": "LFL", "Salon": "NUEVO LOOK MIRADOR"}, {"Brand": "LL", "ProjectNumber1": "10053", "ProjectNumber2": "VC", "Type": "CL C", "Salon": "LLONGUERAS TRIANA"}, {"Brand": "NL", "ProjectNumber1": "10054", "ProjectNumber2": "VE", "Type": "LFL", "Salon": "NUEVO LOOK VECINDARIO"}, {"Brand": "NL", "ProjectNumber1": "10052", "ProjectNumber2": "TE", "Type": "LFL", "Salon": "NUEVO LOOK ALCAMPO"}, {"Brand": "NL", "ProjectNumber1": "10075", "ProjectNumber2": "LP", "Type": "OP C", "Salon": "NUEVO LOOK LAS PALMAS"}, {"Brand": "JLDS", "ProjectNumber1": "10074", "ProjectNumber2": "0015", "Type": "OP", "Salon": "JLD CC XANADÚ"}, {"Brand": "LL", "ProjectNumber1": "10076", "ProjectNumber2": "IB", "Type": "OP", "Salon": "ISABEL BEDIA"}, {"Brand": "JLDS", "ProjectNumber1": "10077", "ProjectNumber2": "EL", "Type": "OP C", "Salon": "OPEN MALL"}, {"Brand": "OMC", "ProjectNumber1": "10082", "ProjectNumber2": "VG", "Type": "OP OMC", "Salon": "VITORIA-GASTEIZ"}, {"Brand": "OMC", "ProjectNumber1": "10080", "ProjectNumber2": "VCA", "Type": "CL OMC", "Salon": "VITORIA-CANCILLER AYALA"}, {"Brand": "OMC", "ProjectNumber1": "10081", "ProjectNumber2": "VD", "Type": "OP OMC", "Salon": "VITORIA-DONOSTI"}, {"Brand": "OMC", "ProjectNumber1": "10083", "ProjectNumber2": "ME", "Type": "OP OMC", "Salon": "MIRANDA DEL EBRO-RAMON Y CAJAL"}, {"Brand": "OMC", "ProjectNumber1": "10032", "ProjectNumber2": "PPC", "Type": "OP OMC", "Salon": "PAMPLONA PAULINO CABALLERO"}, {"Brand": "OMC", "ProjectNumber1": "10085", "ProjectNumber2": "MNB", "Type": "OP OMC", "Salon": "NUÑEZ DE BALBOA"}, {"Brand": "OMC", "ProjectNumber1": "10087", "ProjectNumber2": "MP", "Type": "OP OMC", "Salon": "MADRID PADILLA"}, {"Brand": "OMC", "ProjectNumber1": "10086", "ProjectNumber2": "DL", "Type": "OP OMC", "Salon": "MADRID DIEGO DE LEON"}, {"Brand": "OMC", "ProjectNumber1": "10088", "ProjectNumber2": "VCB", "Type": "OP OMC", "Salon": "VALENCIA CARDENAL BENLLOCH"}, {"Brand": "OMC", "ProjectNumber1": "10089", "ProjectNumber2": "GO", "Type": "OP OMC", "Salon": "ALICANTE GENERALO´DONNEL"}, {"Brand": "OMC", "ProjectNumber1": "10090", "ProjectNumber2": "AJ", "Type": "OP OMC", "Salon": "ELCHE- AVDA JUBALCOY"}, {"Brand": "OMC", "ProjectNumber1": "10091", "ProjectNumber2": "OT", "Type": "OP OMC", "Salon": "ELCHE-OBISPO TORMO"}, {"Brand": "OMC", "ProjectNumber1": "10093", "ProjectNumber2": "RV", "Type": "OP OMC", "Salon": "ELCHE-REINA VICTORIA"}, {"Brand": "OMC", "ProjectNumber1": "10092", "ProjectNumber2": "PR", "Type": "OP OMC", "Salon": "VITORIA PRADO"}, {"Brand": "TBC", "ProjectNumber1": "10078", "ProjectNumber2": "CA", "Type": "OP C", "Salon": "ARENAS TBC"}, {"Brand": "TBC", "ProjectNumber1": "10079", "ProjectNumber2": "TBC", "Type": "OP C", "Salon": "THE BARBER COMPANY ALISIOS"}];
+
+const state = { q:"", brand:"ALL", type:"ALL" };
+
+function typeClass(t){
+  if(t.startsWith("LFL")) return "lfl";
+  if(t.startsWith("CL")) return "cl";
+  if(t.startsWith("OP")) return "op";
+  return "cl";
+}
+
+function uniqueSorted(arr){ return [...new Set(arr)].sort(); }
+
+function renderStats(){
+  const brands = uniqueSorted(DATA.map(d=>d.Brand));
+  const lfl = DATA.filter(d=>d.Type.startsWith("LFL")).length;
+  const cl = DATA.filter(d=>d.Type.startsWith("CL")).length;
+  const op = DATA.filter(d=>d.Type.startsWith("OP")).length;
+  const stats = [
+    {n: DATA.length, l:"Salones totales"},
+    {n: brands.length, l:"Enseñas"},
+    {n: lfl, l:"Tipo LFL"},
+    {n: cl, l:"Tipo CL"},
+    {n: op, l:"Tipo OP"},
+  ];
+  document.getElementById("stats").innerHTML = stats.map(s=>
+    `<div class="stat"><div class="n">${s.n}</div><div class="l">${s.l}</div></div>`
+  ).join("");
+}
+
+function renderChips(){
+  const brands = uniqueSorted(DATA.map(d=>d.Brand));
+  const types = uniqueSorted(DATA.map(d=>d.Type));
+
+  const brandHtml = [`<button class="chip" data-kind="brand" data-val="ALL" aria-pressed="true">Todas las enseñas</button>`]
+    .concat(brands.map(b=>`<button class="chip" data-kind="brand" data-val="${b}" aria-pressed="false">${b} · ${DATA.filter(d=>d.Brand===b).length}</button>`));
+  document.getElementById("brandChips").innerHTML = brandHtml.join("");
+
+  const typeHtml = [`<button class="chip" data-kind="type" data-val="ALL" aria-pressed="true">Todos los tipos</button>`]
+    .concat(types.map(t=>`<button class="chip" data-kind="type" data-val="${t}" aria-pressed="false">${t}</button>`));
+  document.getElementById("typeChips").innerHTML = typeHtml.join("");
+
+  document.querySelectorAll(".chip").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const kind = btn.dataset.kind;
+      state[kind] = btn.dataset.val;
+      document.querySelectorAll(`.chip[data-kind="${kind}"]`).forEach(b=>
+        b.setAttribute("aria-pressed", b===btn ? "true" : "false"));
+      renderResults();
+    });
+  });
+}
+
+function filtered(){
+  const q = state.q.trim().toLowerCase();
+  return DATA.filter(d=>{
+    if(state.brand!=="ALL" && d.Brand!==state.brand) return false;
+    if(state.type!=="ALL" && d.Type!==state.type) return false;
+    if(q && !(d.Salon.toLowerCase().includes(q) || d.Brand.toLowerCase().includes(q) || d.ProjectNumber1.includes(q) || d.ProjectNumber2.toLowerCase().includes(q))) return false;
+    return true;
+  });
+}
+
+function renderResults(){
+  const rows = filtered();
+  document.getElementById("countLine").innerHTML = `Mostrando <b>${rows.length}</b> de <b>${DATA.length}</b> salones`;
+
+  const el = document.getElementById("results");
+  if(rows.length===0){
+    el.innerHTML = `<div class="group"><div class="empty">Ningún salón coincide con la búsqueda o los filtros.</div></div>`;
+    return;
+  }
+
+  const byBrand = new Map();
+  rows.sort((a,b)=> a.Brand.localeCompare(b.Brand) || a.Salon.localeCompare(b.Salon));
+  rows.forEach(r=>{
+    if(!byBrand.has(r.Brand)) byBrand.set(r.Brand, []);
+    byBrand.get(r.Brand).push(r);
+  });
+
+  el.innerHTML = [...byBrand.entries()].map(([brand, items])=>`
+    <div class="group">
+      <div class="group-head">
+        <span class="brand">${brand}</span>
+        <span class="n">${items.length} salón${items.length===1?"":"es"}</span>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>Salón</th><th>Tipo</th><th>Nº proyecto</th><th>Código</th></tr>
+          </thead>
+          <tbody>
+            ${items.map(i=>`
+              <tr>
+                <td class="salon">${i.Salon}</td>
+                <td><span class="pill ${typeClass(i.Type)}">${i.Type}</span></td>
+                <td class="code">${i.ProjectNumber1 || "—"}</td>
+                <td class="code">${i.ProjectNumber2 || "—"}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `).join("");
+}
+
+document.getElementById("search").addEventListener("input", e=>{
+  state.q = e.target.value;
+  renderResults();
+});
+
+renderStats();
+renderChips();
+renderResults();
+</script>
